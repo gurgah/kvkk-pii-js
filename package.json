@@ -1,10 +1,21 @@
 {
   "name": "kvkk-pii",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "KVKK uyumlu Türkçe PII detection kütüphanesi — regex, NER, GLiNER",
-  "keywords": ["pii", "kvkk", "gdpr", "turkish", "nlp", "privacy", "anonymize"],
+  "keywords": [
+    "pii",
+    "kvkk",
+    "gdpr",
+    "turkish",
+    "nlp",
+    "privacy",
+    "anonymize"
+  ],
   "homepage": "https://github.com/gurgah/kvkk-pii-js",
-  "repository": { "type": "git", "url": "https://github.com/gurgah/kvkk-pii-js.git" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gurgah/kvkk-pii-js.git"
+  },
   "license": "MIT",
   "author": "gurgah",
   "type": "module",
@@ -18,7 +29,9 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
@@ -34,6 +47,8 @@
     "@huggingface/transformers": ">=3.0.0"
   },
   "peerDependenciesMeta": {
-    "@huggingface/transformers": { "optional": true }
+    "@huggingface/transformers": {
+      "optional": true
+    }
   }
 }
