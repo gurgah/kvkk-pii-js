@@ -4,3 +4,4 @@ dist/
 .env
 coverage/
 CLAUDE.md
+CLAUDE_EXTENSION.md
