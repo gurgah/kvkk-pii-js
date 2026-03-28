@@ -1,0 +1,33 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+
+  sync-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fixture sync kontrolü
+        run: |
+          for f in tests/fixtures/*.json; do
+            name=$(basename "$f")
+            if [ ! -f "tests/fixtures/$name" ]; then
+              echo "Eksik fixture: $name"
+              exit 1
+            fi
+          done
+          echo "Fixture'lar mevcut."
