@@ -57,9 +57,9 @@ describe('PiiSession', () => {
 });
 
 describe('ComplianceReport', () => {
-  it('TC kimlik KRİTİK risk', () => {
+  it('TC kimlik CRITICAL risk', () => {
     const r = detector.complianceReport('TC: 10000000146');
-    expect(r.riskLevel).toBe('KRİTİK');
+    expect(r.riskLevel).toBe('CRITICAL');
   });
 
   it('temiz metin — risk yok', () => {
