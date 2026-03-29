@@ -1,6 +1,6 @@
 {
   "name": "kvkk-pii",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "KVKK uyumlu Türkçe PII detection kütüphanesi — regex, NER, GLiNER",
   "keywords": [
     "pii",
@@ -17,7 +17,10 @@
     "url": "https://github.com/gurgah/kvkk-pii-js.git"
   },
   "license": "MIT",
-  "author": "gurgah",
+  "author": "Aleonis <hello@aleonis.co>",
+  "bugs": {
+    "email": "hello@aleonis.co"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
