@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { PiiDetector } from '../src/detector.js';
+import { BaseRecognizer } from '../src/base.js';
+import type { PiiEntity } from '../src/result.js';
 
 const detector = new PiiDetector();
 
@@ -171,5 +173,77 @@ describe('ComplianceReport (temel)', () => {
   it('temiz metin — risk yok', () => {
     const r = detector.complianceReport('Merhaba');
     expect(r.entityTypes.length).toBe(0);
+  });
+});
+
+// ─── disable + before/after ─────────────────────────────────────────────────
+
+describe('disable + before/after', () => {
+  it('EMAIL disable edilince bulunamaz', () => {
+    const d = new PiiDetector({ disable: ['EMAIL'] });
+    const r = d.analyze('ali@ornek.com ve TC: 10000000146');
+    expect(r.has('EMAIL')).toBe(false);
+    expect(r.has('TC_KIMLIK')).toBe(true);
+  });
+
+  it('birden fazla disable', () => {
+    const d = new PiiDetector({ disable: ['EMAIL', 'IP_ADRESI'] });
+    const r = d.analyze('ali@ornek.com ve 192.168.1.1');
+    expect(r.has('EMAIL')).toBe(false);
+    expect(r.has('IP_ADRESI')).toBe(false);
+  });
+
+  it('before recognizer once calisir', () => {
+    class SicilNo extends BaseRecognizer {
+      readonly entityType = 'SICIL_NO';
+      find(text: string) {
+        const results: PiiEntity[] = [];
+        const p = /\bSCL-\d{6}\b/g;
+        let m: RegExpExecArray | null;
+        while ((m = p.exec(text)) !== null)
+          results.push(this.entity(m[0], m.index, m.index + m[0].length));
+        return results;
+      }
+    }
+    const d = new PiiDetector({ before: [new SicilNo()] });
+    const r = d.analyze('SCL-004521 ve ali@ornek.com');
+    expect(r.has('SICIL_NO')).toBe(true);
+    expect(r.has('EMAIL')).toBe(true);
+  });
+
+  it('after recognizer sonda calisir', () => {
+    class SicilNo extends BaseRecognizer {
+      readonly entityType = 'SICIL_NO';
+      find(text: string) {
+        const results: PiiEntity[] = [];
+        const p = /\bSCL-\d{6}\b/g;
+        let m: RegExpExecArray | null;
+        while ((m = p.exec(text)) !== null)
+          results.push(this.entity(m[0], m.index, m.index + m[0].length));
+        return results;
+      }
+    }
+    const d = new PiiDetector({ after: [new SicilNo()] });
+    const r = d.analyze('SCL-004521 ve TC: 10000000146');
+    expect(r.has('SICIL_NO')).toBe(true);
+    expect(r.has('TC_KIMLIK')).toBe(true);
+  });
+
+  it('disable + after birlikte', () => {
+    class SicilNo extends BaseRecognizer {
+      readonly entityType = 'SICIL_NO';
+      find(text: string) {
+        const results: PiiEntity[] = [];
+        const p = /\bSCL-\d{6}\b/g;
+        let m: RegExpExecArray | null;
+        while ((m = p.exec(text)) !== null)
+          results.push(this.entity(m[0], m.index, m.index + m[0].length));
+        return results;
+      }
+    }
+    const d = new PiiDetector({ disable: ['EMAIL'], after: [new SicilNo()] });
+    const r = d.analyze('ali@ornek.com, SCL-004521');
+    expect(r.has('EMAIL')).toBe(false);
+    expect(r.has('SICIL_NO')).toBe(true);
   });
 });

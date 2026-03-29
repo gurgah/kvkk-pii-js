@@ -400,7 +400,18 @@ const masked = session.mask();
 
 ---
 
-### Özel recognizer
+### Recognizer'ları devre dışı bırakma
+
+```typescript
+// EMAIL ve IP tespitini kapat
+const detector = new PiiDetector({ disable: ['EMAIL', 'IP_ADRESI'] });
+const result = detector.analyze('ali@ornek.com, 192.168.1.1, TC: 10000000146');
+// Sadece TC_KIMLIK bulunur
+```
+
+### Özel recognizer — before / after
+
+Varsayılan recognizer listesini koruyarak önüne (`before`) veya arkasına (`after`) özel recognizer ekle:
 
 ```typescript
 import { BaseRecognizer, PiiDetector } from 'kvkk-pii';
@@ -420,10 +431,18 @@ class SicilNoRecognizer extends BaseRecognizer {
   }
 }
 
-const detector = new PiiDetector({ recognizers: [new SicilNoRecognizer()] });
-detector.analyze('Çalışan sicil: SCL-004521').entities;
-// → [{ entityType: 'SICIL_NO', text: 'SCL-004521', ... }]
+// Varsayılan recognizer'ların önünde çalışır
+const d1 = new PiiDetector({ before: [new SicilNoRecognizer()] });
+
+// Varsayılan recognizer'ların arkasında çalışır
+const d2 = new PiiDetector({ after: [new SicilNoRecognizer()] });
+
+// disable + after birlikte
+const d3 = new PiiDetector({ disable: ['EMAIL'], after: [new SicilNoRecognizer()] });
 ```
+
+> `recognizers` parametresi varsayılan listeyi tamamen değiştirir.
+> `before`/`after` ise varsayılan listeyi koruyarak etrafına ekler.
 
 ---
 

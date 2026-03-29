@@ -29,8 +29,22 @@ function overlaps(entity: PiiEntity, found: PiiEntity[]): boolean {
 export class RegexLayer {
   private readonly recognizers: BaseRecognizer[];
 
-  constructor(recognizers?: BaseRecognizer[]) {
-    this.recognizers = recognizers ?? DEFAULT_RECOGNIZERS;
+  constructor(options: {
+    recognizers?: BaseRecognizer[];
+    disable?: string[];
+    before?: BaseRecognizer[];
+    after?: BaseRecognizer[];
+  } = {}) {
+    let base = options.recognizers ?? [...DEFAULT_RECOGNIZERS];
+    if (options.disable?.length) {
+      const disabled = new Set(options.disable);
+      base = base.filter(r => !disabled.has(r.entityType));
+    }
+    this.recognizers = [
+      ...(options.before ?? []),
+      ...base,
+      ...(options.after ?? []),
+    ];
   }
 
   analyze(text: string, alreadyFound: PiiEntity[] = []): PiiEntity[] {

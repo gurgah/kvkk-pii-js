@@ -10,6 +10,9 @@ type LayerSpec = 'regex' | 'ner' | 'gliner';
 export interface PiiDetectorOptions {
   layers?: LayerSpec[];
   recognizers?: BaseRecognizer[];
+  disable?: string[];
+  before?: BaseRecognizer[];
+  after?: BaseRecognizer[];
 }
 
 export class PiiDetector {
@@ -18,7 +21,12 @@ export class PiiDetector {
 
   constructor(options: PiiDetectorOptions = {}) {
     this.layers = options.layers ?? ['regex'];
-    this.regexLayer = new RegexLayer(options.recognizers);
+    this.regexLayer = new RegexLayer({
+      recognizers: options.recognizers,
+      disable: options.disable,
+      before: options.before,
+      after: options.after,
+    });
 
     if (this.layers.includes('ner') || this.layers.includes('gliner')) {
       // NER/GLiNER katmanları için @huggingface/transformers gerekli

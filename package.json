@@ -1,6 +1,6 @@
 {
   "name": "kvkk-pii",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "KVKK uyumlu Türkçe PII detection kütüphanesi — regex, NER, GLiNER",
   "keywords": [
     "pii",
