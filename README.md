@@ -6,6 +6,10 @@
 
 **JavaScript/TypeScript için KVKK uyumlu Türkçe kişisel veri tespiti, maskeleme ve uyum kontrolü — tek paket.**
 
+```bash
+npm install kvkk-pii
+```
+
 ---
 
 Şirketinizde yapay zeka kullanılıyor. Destek ekibi müşteri mesajlarını ChatGPT'ye yapıştırıyor. Backend servisi API'ye tam metni gönderiyor. React uygulaması form verilerini doğrudan iletişim katmanına aktarıyor.
